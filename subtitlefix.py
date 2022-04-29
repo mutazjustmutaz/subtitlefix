@@ -18,16 +18,15 @@ allargs = sub_parse.parse_args()
 if Path(allargs.subfile).exists()==False:
  raise FileNotFoundError("File not found. If you're sure the file exists, check the name and path you typed.")
 
-subfilelst=allargs.subfile.rsplit('.',1)
-if(len(subfilelst)>1 and subfilelst[1]!='srt'):
- raise TypeError('Only .srt files are supported.')
+if Path(allargs.subfile).suffix != '.srt':
+ raise TypeError("Only .srt files are supported.")
 
 arglist=[allargs.ma,allargs.ms,allargs.sa,allargs.ss]
 for i in arglist:
  if isinstance(i,int) and i<=0:
-  raise ValueError('Only positive numbers are accepted.')
+  raise ValueError("Only positive numbers are accepted.")
 if any(arglist)==False and allargs.nocc==False:
- raise ValueError('No option was used.')
+ raise ValueError("No option was used.")
  
 
 def add_time(filerw,argtimedelta):
