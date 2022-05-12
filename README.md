@@ -33,4 +33,4 @@ Note that the order of the options isn't important.
 
 ***
 
-TODO: Create a GUI with more features.
+TODO: Create a GUI version with more features.
