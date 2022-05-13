@@ -100,7 +100,7 @@ def subtract_time(filerw,argtimedelta):
   
 def nocc(filerw):
  filestr=filerw.read()
- noccstr=re.sub(r'[- ]*(\(|\[)[A-Z \W]*(\)|\])','',filestr)
+ noccstr=re.sub(r'[- ]*(\(|\[)[A-Za-z \W]*(\)|\])','',filestr)
  filerw.seek(0)
  filerw.truncate()
  filerw.write(noccstr)
