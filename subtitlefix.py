@@ -31,27 +31,31 @@ if any(arglist)==False and allargs.nocc==False:
 
 def add_time(filerw,argtimedelta):
  txtobj=io.StringIO()
- for line in filerw.readlines():
-  if(line.count(':')==4):
-   #e.g. 00:00:42,159 --> 00:00:46,359
-   hr1=int(line[0:2])
-   min1=int(line[3:5])
-   sec1=int(line[6:8])
-   subtimedelta1=timedelta(seconds=sec1,minutes=min1,hours=hr1)
-   strttimedelta=subtimedelta1+argtimedelta
-   strttime=str(strttimedelta) 
-   if(strttime[1]==':'):
-    strttime='0'+strttime
-   hr2=int(line[17:19])
-   min2=int(line[20:22])
-   sec2=int(line[23:25])
-   subtimedelta2=timedelta(seconds=sec2,minutes=min2,hours=hr2)
-   endtimedelta=subtimedelta2+argtimedelta
-   endtime=str(endtimedelta)
-   if(endtime[1]==':'):
-    endtime='0'+endtime
-   line=strttime+line[8:17]+endtime+line[25:29]+'\n'
-  txtobj.writelines(line)
+ try:
+  for line in filerw.readlines():
+   if(line.count(':')==4):
+    #e.g. 00:00:42,159 --> 00:00:46,359
+    hr1=int(line[0:2])
+    min1=int(line[3:5])
+    sec1=int(line[6:8])
+    subtimedelta1=timedelta(seconds=sec1,minutes=min1,hours=hr1)
+    strttimedelta=subtimedelta1+argtimedelta
+    strttime=str(strttimedelta) 
+    if(strttime[1]==':'):
+     strttime='0'+strttime
+    hr2=int(line[17:19])
+    min2=int(line[20:22])
+    sec2=int(line[23:25])
+    subtimedelta2=timedelta(seconds=sec2,minutes=min2,hours=hr2)
+    endtimedelta=subtimedelta2+argtimedelta
+    endtime=str(endtimedelta)
+    if(endtime[1]==':'):
+     endtime='0'+endtime
+    line=strttime+line[8:17]+endtime+line[25:29]+'\n'
+   txtobj.writelines(line)
+ except UnicodeDecodeError:
+  print("Error: Encoding not supported.")
+  exit()
  filerw.seek(0)
  filerw.truncate()
  txtobj.seek(0)
@@ -62,32 +66,36 @@ def add_time(filerw,argtimedelta):
 
 def subtract_time(filerw,argtimedelta):
  txtobj=io.StringIO()
- y=True
- for line in filerw.readlines():
-  if(line.count(':')==4):
-   #e.g. 00:00:42,159 --> 00:00:46,359
-   hr1=int(line[0:2])
-   min1=int(line[3:5])
-   sec1=int(line[6:8])
-   subtimedelta1=timedelta(seconds=sec1,minutes=min1,hours=hr1)
-   strttimedelta=subtimedelta1-argtimedelta
-   strttime=str(strttimedelta) 
-   if('day' in strttime):
-    y=False
-    break
-   if(strttime[1]==':'):
-    strttime='0'+strttime
-   hr2=int(line[17:19])
-   min2=int(line[20:22])
-   sec2=int(line[23:25])
-   subtimedelta2=timedelta(seconds=sec2,minutes=min2,hours=hr2)
-   endtimedelta=subtimedelta2-argtimedelta
-   endtime=str(endtimedelta)
-   if(endtime[1]==':'):
-    endtime='0'+endtime
-   line=strttime+line[8:17]+endtime+line[25:29]+'\n'
-  txtobj.writelines(line)
- if(y==True):
+ dayflag=True
+ try:
+  for line in filerw.readlines():
+   if(line.count(':')==4):
+    #e.g. 00:00:42,159 --> 00:00:46,359
+    hr1=int(line[0:2])
+    min1=int(line[3:5])
+    sec1=int(line[6:8])
+    subtimedelta1=timedelta(seconds=sec1,minutes=min1,hours=hr1)
+    strttimedelta=subtimedelta1-argtimedelta
+    strttime=str(strttimedelta) 
+    if('day' in strttime):
+     dayflag=False
+     break
+    if(strttime[1]==':'):
+     strttime='0'+strttime
+    hr2=int(line[17:19])
+    min2=int(line[20:22])
+    sec2=int(line[23:25])
+    subtimedelta2=timedelta(seconds=sec2,minutes=min2,hours=hr2)
+    endtimedelta=subtimedelta2-argtimedelta
+    endtime=str(endtimedelta)
+    if(endtime[1]==':'):
+     endtime='0'+endtime
+    line=strttime+line[8:17]+endtime+line[25:29]+'\n'
+   txtobj.writelines(line)
+ except UnicodeDecodeError:
+  print("Error: Encoding not supported.")
+  exit()
+ if(dayflag==True):
   filerw.seek(0)
   filerw.truncate()
   txtobj.seek(0)
@@ -99,7 +107,11 @@ def subtract_time(filerw,argtimedelta):
   
   
 def nocc(filerw):
- filestr=filerw.read()
+ try:
+  filestr=filerw.read()
+ except UnicodeDecodeError:
+  print("Error: Encoding not supported.")
+  exit()
  noccstr=re.sub(r'[- ]*(\(|\[)[A-Za-z \W]*(\)|\])','',filestr)
  filerw.seek(0)
  filerw.truncate()
